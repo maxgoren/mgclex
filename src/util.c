@@ -1,6 +1,6 @@
 #include "util.h"
 
-void dfsmat(Transition* t, int s, int mat[][256]) {
+void dfsmat(Transition* t, int s, int mat[][128]) {
     if (t != NULL) {
         dfsmat(t->left,s,mat);
         mat[s][t->ch] = t->to;
@@ -10,28 +10,26 @@ void dfsmat(Transition* t, int s, int mat[][256]) {
 
 
 void dfa2matrix(DFA* dfa, char* filename) {
-    int matrix[dfa->numstates+1][256];
+    int matrix[dfa->numstates+1][128];
     for (int i = 0; i < dfa->numstates+1; i++)
-        for (int j = 0; j < 256; j++)
+        for (int j = 0; j < 128; j++)
             matrix[i][j] = 0;
     for (int i = 1; i <= dfa->numstates; i++) {
         dfsmat(dfa->states[i]->transitions, i, matrix);
     }
-    for (int i = 0; i < 128; i++) printf("%c ", i <= 30 ? ' ':(char)i);
-    printf("\n");
     FILE* fd = fopen(filename, "w+");
     fprintf(fd, "#ifndef lexer_matrix_h\n#define lexer_matrix_h\n\n");
-    fprintf(fd, "int matrix[%d][256] = {\n", dfa->numstates+1);
+    fprintf(fd, "int matrix[%d][128] = {\n", dfa->numstates+1);
     int i = 0;
     for (i = 0; i < dfa->numstates; i++) {
         fprintf(fd, "\t{ ");
-        for (int j = 0; j < 255; j++) {
+        for (int j = 0; j < 128; j++) {
             fprintf(fd, "%d, ", matrix[i][j]);
         }
         fprintf(fd, "0},\n");
     }
     fprintf(fd, "\t{ ");
-    for (int j = 0; j < 255; j++) {
+    for (int j = 0; j < 128; j++) {
         fprintf(fd, "%d, ", matrix[i][j]);
     }
     fprintf(fd, "0}\n");

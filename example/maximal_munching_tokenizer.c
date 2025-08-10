@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../lexer_matrix.h"
 #include "../src/lex_token_def.h"
-
+#include "../src/util.h"
 char* token2string(int accept_state) {
     return symbolStr[accept[accept_state]];
 }
@@ -14,7 +14,7 @@ typedef struct {
     int length;
 } MyToken;
 
-MyToken* makeToken(enum TKSymbol symbol, char* text, int length) {
+MyToken* makeLexToken(enum TKSymbol symbol, char* text, int length) {
     MyToken* tk = (MyToken*)malloc(sizeof(MyToken));
     tk->length = length;
     tk->text = (char*)malloc(sizeof(char)*(length+1));
@@ -42,19 +42,20 @@ MyToken* next_token(char* input) {
             break;
         }
     }
+    printf("\n");
     if (last_match == 0) {
         return NULL;
     }
-    return makeToken(accept[last_match], input, match_len);
+    return makeLexToken(accept[last_match], input, match_len);
 }
 
 
-void lex_input(char* input) {
+void tokenize_input(char* input) {
     for (int i = 0; i < strlen(input);) {
         while (input[i] == ' ' || input[i] == '\t' || input[i] == '\r' || input[i] == '\n') i++;
         MyToken* next = next_token(input+i);
         if (next != NULL) {
-            printf("\n\nRESULT: <%s, %s>\n", symbolStr[next->symbol], next->text);
+            printf("<%s, %s>\n", symbolStr[next->symbol], next->text);
             i += next->length;
         } else {
             i++;
@@ -63,5 +64,19 @@ void lex_input(char* input) {
 }
 
 int main(int argc, char* argv[]) {
-    lex_input(argv[1]);
+    tokenize_input(slurp_file(argv[1]));
+    int farthest = 0;
+    for (int i = 0; i < 175; i++) {
+        bool run_start = false;
+        for (int j = 0; j < 256; j++) {
+            if (matrix[i][j] > 0 && run_start == false) {
+                run_start = true;
+            }
+            if (matrix[i][j] > 0 && j > farthest) {
+                farthest = j;
+                printf(".");
+            }
+        }
+    }
+    printf(" %d\n", farthest);
 }

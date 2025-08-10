@@ -10,6 +10,7 @@ lex_example:
 	gcc -c src/dfa/transition.c
 	gcc -c src/lex.c
 	gcc -c src/lex_token_def.c
+	gcc -c src/lex_rules.c
 	gcc -c src/util.c
 	gcc -c example/ex.c
 	gcc *.o -o ex
