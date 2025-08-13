@@ -129,13 +129,13 @@ TKTokenListNode* lex_input(DFA* dfa, char* input, re_ast** ast_node_table) {
         thead->next = makeTokenListNode(t);
         thead = thead->next;
         int i, j;
-        if (rules[t->rule_id].token == TK_STR) {
+        /*if (rules[t->rule_id].token == TK_STR) {
             for (i = 0, j = 1; j < t->length-1;)
                 t->text[i++] = p[j++];
-        } else {
-            for (i = 0, j = 0; i < t->length;)
-                t->text[i++] = p[j++];
-        }
+        } else {*/
+        for (i = 0, j = 0; i < t->length;)
+            t->text[i++] = p[j++];
+        //}
         t->text[i++] = '\0';
         p += t->length;
     }
