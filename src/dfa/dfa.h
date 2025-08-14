@@ -29,6 +29,7 @@ int symbolIsInAlphabet(char* str, int n, char c);
 DFA buildDFA(re_ast* ast, char* re, re_ast** ast_node_table);
 DFAState* markAcceptState(DFAState* state, re_ast** ast_node_table);
 void printDFA(DFA dfa);
+void freeDFA(DFA* dfa);
 
 #ifdef __cplusplus
 }

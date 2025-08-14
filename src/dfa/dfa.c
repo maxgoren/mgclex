@@ -1,4 +1,5 @@
 #include "dfa.h"
+#include "statequeue.h"
 
 void initDFA(DFA* dfa, int numstates) {
     dfa->numstates = 0;
@@ -152,3 +153,10 @@ void initAlphabet(char* alphabet,  char* re) {
 #endif
 }
 
+void freeDFA(DFA* dfa) {
+    for (int i = 0; i <= dfa->numstates; i++) {
+        if (dfa->states[i] != NULL) {
+            freeDFAState(dfa->states[i]);
+        }
+    }
+}

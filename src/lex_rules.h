@@ -3,7 +3,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "lex.h"
+#include "lexgen.h"
 #include "lex_token_def.h"
 //This file is used for specifying TokenRules
 //TokenRules are a regex pattern, and an associated TKSymbol

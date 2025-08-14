@@ -6,7 +6,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lex.h"
+#include "lexgen.h"
 
 char *slurp_file(const char *filename);
 void serialize_dfa_state(DFAState* state, int from, FILE* fd);

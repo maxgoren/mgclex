@@ -1,9 +1,9 @@
 #include "lex_rules.h"
 
-int num_rules = 11;
+int num_rules = 12;
 
 TokenRule rules[] = {
-    //{"(\\d+)\\.(\\d+)",TK_NUMBER},
+    {"(\\d+)[\\.](\\d+)",TK_NUMBER},
     {"[0-9]+", TK_NUMBER},
     {"println", TK_PRINTLN},
     {"[A-Za-z][A-Za-z0-9_]*", TK_ID},
