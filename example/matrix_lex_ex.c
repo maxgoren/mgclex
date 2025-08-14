@@ -31,8 +31,7 @@ MyToken* next_token(char* input) {
     int last_match = 0;
     int match_len = 0;
     for (char* p = input; *p; *p++) {
-        if (matrix[state][*p] < 1) state = matrix[state]['.'];
-        else state = matrix[state][*p];
+        state = matrix[state][*p];
         printf("%d -> ", state);
         if (state > 0 && accept[state] > -1) {
             last_match = state;
@@ -65,18 +64,4 @@ void tokenize_input(char* input) {
 
 int main(int argc, char* argv[]) {
     tokenize_input(slurp_file(argv[1]));
-    int farthest = 0;
-    for (int i = 0; i < 175; i++) {
-        bool run_start = false;
-        for (int j = 0; j < 256; j++) {
-            if (matrix[i][j] > 0 && run_start == false) {
-                run_start = true;
-            }
-            if (matrix[i][j] > 0 && j > farthest) {
-                farthest = j;
-                printf(".");
-            }
-        }
-    }
-    printf(" %d\n", farthest);
 }

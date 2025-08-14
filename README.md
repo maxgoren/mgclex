@@ -29,5 +29,10 @@ Regardless of whether you choose method 1 or 2, there are a few steps you need t
     2) in lex_rules.h we specify the regular expression patterns used to match each
         symbol declared in the TKSymbol enum to a lexeme appearing in the input
 
-    
-        
+ Once this is complete running:
+
+	make && mgclex mylexer.h
+
+Will output a header file, mylexer.h, which contains your DFA's transition matrix
+and accept table. The file "matrix_lex_ex.c" in the example folder demonstrates using
+the generated header to impelement a maximal-munch tokenizer.

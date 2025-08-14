@@ -1,6 +1,6 @@
 #include "lex_rules.h"
 
-int num_rules = 12;
+int num_rules = 13;
 
 TokenRule rules[] = {
     {"(\\d+)[\\.](\\d+)",TK_NUMBER},
@@ -14,5 +14,6 @@ TokenRule rules[] = {
     {"\\*", TK_MUL},
     {"/", TK_DIV},
     {":=", TK_ASSIGN},
+    {";", TK_SEMI},
     {"<fin.>", TK_EOI}
 };
