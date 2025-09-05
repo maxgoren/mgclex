@@ -13,7 +13,8 @@ for fast string tokenization.
       {"pattern",SYMBOL}
 
 Patterns are specified as regular expressions.
-   Supported Regular expression operators:
+Supported Regular expression operators:
+
       R|R - alternation
       R* - Occurs _zero_ or more times
       R+ - Occurs _one_ or more times
