@@ -6,7 +6,7 @@ char** symbols;
 
 void initSymbolSet() {
     num_symbols = 0;
-    sym_cap = 35;
+    sym_cap = 5;
     symbols = (char**)malloc(sizeof(char*)*sym_cap);
 }
 
@@ -16,7 +16,7 @@ int registerSymbol(char* symbol) {
             return i;
     }
     if (num_symbols+1 == sym_cap) {
-        char* tmp = symbols;
+        char** tmp = symbols;
         symbols = (char**)malloc(sizeof(char*)*(2*sym_cap));
         for (int i = 0; i < num_symbols; i++)
             symbols[i] = tmp[i];
@@ -33,7 +33,7 @@ TokenRule* rules;
 
 void initTokenRulesVec() {
     num_rules = 0;
-    capacity = 35;
+    capacity = 5;
     rules = (TokenRule*)malloc(sizeof(TokenRule)*capacity);
 }
 

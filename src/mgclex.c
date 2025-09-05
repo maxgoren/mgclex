@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/lexgen.h"
-#include "../src/util.h"
-#include "../src/lex_rules.h"
+#include "lexgen.h"
+#include "util.h"
+#include "lex_rules.h"
+#include "readconfig.h"
 
 int main(int argc, char* argv[]) {
     char *filename;
