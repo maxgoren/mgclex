@@ -9,7 +9,7 @@ void dfsmat(Transition* t, int s, int mat[][256]) {
 }
 
 
-void dfa2matrix(DFA* dfa, char* filename) {
+void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
     int matrix[dfa->numstates+1][256];
     for (int i = 0; i < dfa->numstates+1; i++)
         for (int j = 0; j < 256; j++)
@@ -19,6 +19,18 @@ void dfa2matrix(DFA* dfa, char* filename) {
     }
     FILE* fd = fopen(filename, "w+");
     fprintf(fd, "#ifndef lexer_matrix_h\n#define lexer_matrix_h\n\n");
+    fprintf(fd, "enum TKSymbol {\n");
+    int j = 0;
+    while (j < num_symbols) {
+        fprintf(fd, "%s", symbols[j]);
+        if (j+1 < num_symbols) {
+            fprintf(fd, ",");
+            if (j % 5 == 0)
+                fprintf(fd, "\n");
+        }
+        j++;
+    }
+    fprintf(fd, "\n};\n");
     fprintf(fd, "int matrix[%d][256] = {\n", dfa->numstates+1);
     int i = 0;
     for (i = 0; i < dfa->numstates; i++) {

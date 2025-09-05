@@ -10,7 +10,7 @@ extern "C" {
 
 char *slurp_file(const char *filename);
 void serialize_dfa_state(DFAState* state, int from, FILE* fd);
-void dfa2matrix(DFA* d, char* filename);
+void dfa2matrix(DFA* d, char* filename, char* symbols[], int num_symbols);
 void dfa2json(DFA* d);
 
 #ifdef __cplusplus

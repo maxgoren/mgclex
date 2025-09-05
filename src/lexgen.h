@@ -6,11 +6,10 @@ extern "C" {
 #include "dfa/re2ast/src/ast.h"
 #include "dfa/re2ast/src/parser.h"
 #include "dfa/re_to_dfa.h"
-#include "lex_token_def.h"
 
 typedef struct {
     char* pattern;
-    enum TKSymbol token;
+    int token;
 } TokenRule;
 
 typedef struct {
@@ -23,7 +22,7 @@ typedef struct {
 
 extern int num_rules;
 extern bool in_string;
-extern TokenRule rules[];
+extern TokenRule* rules;
 void tag_final_pos_with_token_id(re_ast* ast, int rulenum);
 CombinedRE* combine(int numrules);
 CombinedRE* init_lexer_patterns(int numrules);

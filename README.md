@@ -7,31 +7,31 @@ for fast string tokenization.
 
 ## how to use mgclex
  
-There are two (2) possible ways to use mgclex in your project.
+ mgclex expects a textfile containing patterns and symbols from which to build a dfa.
+ each pair is on its own line, enclosed in braces:
 
-    1) use mgclex to generate the transition and accepting state
-       tables as a header file for you to use as the basis of your own 
-       tokenization system, this is the most flexible method and the "quickest"
-       way of getting your project up and running.
+      {"pattern",SYMBOL}
 
-    OR
+Patterns are specified as regular expressions.
+   Supported Regular expression operators:
+      R|R - alternation
+      R* - Occurs _zero_ or more times
+      R+ - Occurs _one_ or more times
+      R? - Occurs zero or one times
+      RR - Concatenation
+      [AEIOU] - Character classes, example matches a vowel
+      [0-9A-Fa-f] - Ranges, example matches hexadecimal digits/chars
+      . - Wildcard to match any character ex: ".*" is a pattern to match quoted strings.
+To use any of the operators as literals, you must escape them with a \ (see calculator example).
 
-    2) use the DFA structure and its Transition AVL trees directly along with the ast_node_table
-       as the basis for your pattern matching needs. This is the method of choice for those who want
-       the finest degree of control over.
+For example if you wanted to tokenize expressions for a desk claculator app
+your specification could look like this:
 
-Regardless of whether you choose method 1 or 2, there are a few steps you need to take for both:
-
-    1) in lex_token_def.h there is a "TKSymbol" enum. Each TKSymbol will be used for identifying
-       what a recognized lexeme is. As an example, we might use TK_NUMBER for tagging a lexeme 
-       comprised of all numerical digits
-
-    2) in lex_rules.h we specify the regular expression patterns used to match each
-        symbol declared in the TKSymbol enum to a lexeme appearing in the input
-
- Once this is complete running:
-
-	make && mgclex mylexer.h
+      {"[0-9]+", TK_NUMBER}
+      {"\+", TK_PLUS}
+      {"-", TK_MINUS}
+      {"\*", TK_MULT}
+      {"\\", TK_DIV}
 
 Will output a header file, mylexer.h, which contains your DFA's transition matrix
 and accept table. The file "matrix_lex_ex.c" in the example folder demonstrates using
