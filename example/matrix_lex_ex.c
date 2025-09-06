@@ -1,21 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../lexer_matrix.h"
-#include "../src/lex_token_def.h"
-#include "../src/util.h"
-char* token2string(int accept_state) {
-    return symbolStr[accept[accept_state]];
-}
+#include "mgclex_matrix.h"
 
 typedef struct {
     enum TKSymbol symbol;
     char* text;
     int length;
-} MyToken;
+} Token;
 
-MyToken* makeLexToken(enum TKSymbol symbol, char* text, int length) {
-    MyToken* tk = (MyToken*)malloc(sizeof(MyToken));
+Token* makeLexToken(enum TKSymbol symbol, char* text, int length) {
+    Token* tk = (Token*)malloc(sizeof(Token));
     tk->length = length;
     tk->text = (char*)malloc(sizeof(char)*(length+1));
     for (int i = 0; i < length; i++) {
@@ -26,7 +21,7 @@ MyToken* makeLexToken(enum TKSymbol symbol, char* text, int length) {
     return tk;
 }
 
-MyToken* next_token(char* input) {
+Token* next_token(char* input) {
     int state = 1;
     int last_match = 0;
     int match_len = 0;
@@ -52,7 +47,7 @@ MyToken* next_token(char* input) {
 void tokenize_input(char* input) {
     for (int i = 0; i < strlen(input);) {
         while (input[i] == ' ' || input[i] == '\t' || input[i] == '\r' || input[i] == '\n') i++;
-        MyToken* next = next_token(input+i);
+        Token* next = next_token(input+i);
         if (next != NULL) {
             printf("<%s, %s>\n", symbolStr[next->symbol], next->text);
             i += next->length;
@@ -63,5 +58,8 @@ void tokenize_input(char* input) {
 }
 
 int main(int argc, char* argv[]) {
-    tokenize_input(slurp_file(argv[1]));
+    if (argc < 2)
+       return 0;
+    tokenize_input(argv[1]);
+    return 0;
 }
