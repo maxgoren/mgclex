@@ -32,7 +32,7 @@ your specification could look like this:
       {"\+", TK_PLUS}
       {"-", TK_MINUS}
       {"\*", TK_MULT}
-      {"\\", TK_DIV}
+      {"/", TK_DIV}
 
 Will output a header file, mylexer.h, which contains your DFA's transition matrix
 and accept table. The file "matrix_lex_ex.c" in the example folder demonstrates using
