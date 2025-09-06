@@ -28,11 +28,13 @@ To use any of the operators as literals, you must escape them with a \ (see calc
 For example if you wanted to tokenize expressions for a desk claculator app
 your specification could look like this:
 
-      {"[0-9]+", TK_NUMBER}
+      {"[0-9]+(\.)?[0-9]*", TK_NUMBER}
       {"\+", TK_PLUS}
       {"-", TK_MINUS}
       {"\*", TK_MULT}
       {"/", TK_DIV}
+      {"\(", TK_LPAREN}
+      {"\)", TK_RPAREN}
 
 Will output a header file, mylexer.h, which contains your DFA's transition matrix
 and accept table. The file "matrix_lex_ex.c" in the example folder demonstrates using
