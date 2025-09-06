@@ -23,6 +23,8 @@ Supported Regular expression operators:
       [AEIOU] - Character classes, example matches a vowel
       [0-9A-Fa-f] - Ranges, example matches hexadecimal digits/chars
       . - Wildcard to match any character ex: ".*" is a pattern to match quoted strings.
+      R(R*) - Grouping: Parentheses can be used to override operator precedence
+      
 To use any of the operators as literals, you must escape them with a \ (see calculator example).
 
 For example if you wanted to tokenize expressions for a desk claculator app
