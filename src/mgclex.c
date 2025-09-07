@@ -2,25 +2,44 @@
 #include <stdlib.h>
 #include "lexgen.h"
 #include "util.h"
-#include "lex_rules.h"
+#include "tokenrules.h"
 #include "readconfig.h"
+#define VERSION 1.0
+
+void showUsage();
+void generateLexer(char* specfilename, char* outfilename);
 
 int main(int argc, char* argv[]) {
-    char *filename;
-    if (argc < 3) {
-        filename = strdup("mgclex_matrix.h");
+    char *outfilename;
+    if (argc < 2) {
+        showUsage();
+        return -1;
+    } else if (argc < 3) {
+        outfilename = strdup("mgclex_matrix.h");
     } else {
-        filename = argv[2];
+        outfilename = argv[2];
     }
-    readConfig(argv[1]);
+    generateLexer(argv[1], outfilename);
+    return 0;
+}
+
+void generateLexer(char* specfile, char* outfile) {
+    readConfig(specfile);
     printf("[*] Initializing...\n");
     CombinedRE* cre = init_lexer_patterns(num_rules);
     printf("[*] Compiling DFA...\n");
     DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table);
-    printf("[*] Writing matrix and accept states to %s\n", filename);
-    dfa2matrix(&dfa, filename, symbols, num_symbols);
+    printf("[*] Writing matrix and accept states to %s\n", outfile);
+    dfa2matrix(&dfa, outfile, symbols, num_symbols);
     printf("[*] Cleaning up...\n");
     freeDFA(&dfa);
     printf("[*] Complete!\n");
-    return 0;
+}
+
+void showUsage() {
+    printf("MGCLex v%f, The no-frills lexer generator.\n", VERSION);
+    printf("Usage:\n");
+    printf("\t mgclex <spec file name> <output file name>\n");
+    printf("\n");
+    printf("\n");
 }

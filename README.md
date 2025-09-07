@@ -5,7 +5,18 @@ the Aho, Sethi, Ullman Direct DFA Construction to
 quickly and painlessly generate a DFA based lexer
 for fast string tokenization.
 
-## how to use mgclex
+# how to use MGCLex
+
+## Installing MGCLex
+
+MGCLex can be built by cloning this repository to your local machine and typing 
+at the command line in the directory you cloned to:
+
+      make && sudo make install && make clean
+
+This will automatically build and install MGCLex using your systems 'make' system.
+
+## Specification Filesand 
  
  mgclex expects a textfile containing patterns and symbols from which to build a dfa.
  each pair is on its own line, enclosed in braces:

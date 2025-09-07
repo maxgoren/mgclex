@@ -1,4 +1,4 @@
-#include "lex_rules.h"
+#include "tokenrules.h"
 
 int num_symbols;
 int sym_cap;

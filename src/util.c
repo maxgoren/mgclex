@@ -1,24 +1,50 @@
 #include "util.h"
 
-void dfsmat(Transition* t, int s, int mat[][256]) {
-    if (t != NULL) {
-        dfsmat(t->left,s,mat);
-        mat[s][t->ch] = t->to;
-        dfsmat(t->right,s,mat);
-    }
+
+//outputs DFA as a 2d matrix and accept table as a header file
+void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
+    int matrix[dfa->numstates+1][256];
+    dfstool(dfa, matrix);
+    FILE* fd = fopen(filename, "w+");
+    writeHeader(fd);
+    writeEnum(fd, symbols, num_symbols);
+    writeMatrix(fd, dfa, matrix);
+    writeAccept(fd, dfa);
+    writeFooter(fd);
+    fclose(fd);
 }
 
 
-void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
-    int matrix[dfa->numstates+1][256];
+//Fills in matrix using dfa states transitions
+void dfs(Transition* t, int s, int mat[][256]) {
+    if (t != NULL) {
+        dfs(t->left,s,mat);
+        mat[s][t->ch] = t->to;
+        dfs(t->right,s,mat);
+    }
+}
+
+//Initialize matrix and call DFS on each states transitions
+void dfstool(DFA* dfa, int matrix[][256]) {
     for (int i = 0; i < dfa->numstates+1; i++)
         for (int j = 0; j < 256; j++)
             matrix[i][j] = 0;
     for (int i = 1; i <= dfa->numstates; i++) {
         dfsmat(dfa->states[i]->transitions, i, matrix);
     }
-    FILE* fd = fopen(filename, "w+");
-    fprintf(fd, "#ifndef lexer_matrix_h\n#define lexer_matrix_h\n\n");
+}
+
+
+void writeHeader(FILE* fd) {
+    fprintf(fd, "#ifndef matrix_h\n");
+    fprintf(fd, "#define matrix_h\n\n");
+}
+
+void writeFooter(FILE* fd) {
+    fprintf(fd, "\n#endif");
+}
+
+void writeEnum(FILE* fd, char* symbols[], int num_symbols) {
     fprintf(fd, "enum TKSymbol {\n");
     int j = 0;
     while (j < num_symbols) {
@@ -31,21 +57,26 @@ void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
         j++;
     }
     fprintf(fd, "\n};\n");
+}
+
+void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
     fprintf(fd, "int matrix[%d][256] = {\n", dfa->numstates+1);
     int i = 0;
-    for (i = 0; i < dfa->numstates; i++) {
+    for (i = 0; i <= dfa->numstates; i++) {
         fprintf(fd, "\t{ ");
         for (int j = 0; j < 255; j++) {
             fprintf(fd, "%d, ", matrix[i][j]);
         }
-        fprintf(fd, "0},\n");
+        if (i+1 == 256)
+            fprintf(fd, "0}\n");
+        else
+            fprintf(fd, "0},\n");
+        
     }
-    fprintf(fd, "\t{ ");
-    for (int j = 0; j < 255; j++) {
-        fprintf(fd, "%d, ", matrix[i][j]);
-    }
-    fprintf(fd, "0}\n");
     fprintf(fd, "};\n\n");
+}
+
+void writeAccept(FILE* fd, DFA* dfa) {
     fprintf(fd, "int accept[%d] = {\n", dfa->numstates+1);
     for (int i = 0; i <= dfa->numstates; i++) {
         if (dfa->states[i] != NULL && dfa->states[i]->is_accepting) {
@@ -55,12 +86,13 @@ void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
         }
         if (i < dfa->numstates) fprintf(fd,",\n");
     }
-    fprintf(fd, "\n};\n\n#endif");
-    fclose(fd);
+    fprintf(fd, "\n};\n");
 }
 
 
-void dfa2json(DFA* dfa) {
+
+
+void __dfa2json(DFA* dfa) {
     FILE* fd = fopen("table_gen.trans", "w+");
     fprintf(fd, "{\n  \"DFA\": [\n");
     int i;
@@ -100,37 +132,4 @@ void serialize_dfa_state(DFAState* state, int from, FILE* fd) {
         if (stsp > 0) fprintf(fd, ",\n");
     }
     fprintf(fd, " ]\n\t\t}");
-}
-
-char *slurp_file(const char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return NULL;
-    }
-
-    // Determine file size
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    char *buffer = (char *)malloc(sizeof(char)*(file_size + 1));
-    if (buffer == NULL) {
-        perror("Error allocating memory");
-        fclose(file);
-        return NULL;
-    }
-
-    size_t bytes_read = fread(buffer, 1, file_size, file);
-    if (bytes_read != file_size) {
-        perror("Error reading file");
-        free(buffer);
-        fclose(file);
-        return NULL;
-    }
-
-    buffer[file_size] = '\0';
-
-    fclose(file);
-    return buffer;
 }

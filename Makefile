@@ -1,4 +1,4 @@
-lex_example:
+mgclex:
 	gcc -c src/dfa/re2ast/src/ast.c
 	gcc -c src/dfa/re2ast/src/parser.c
 	gcc -c src/dfa/re2ast/src/tokens.c 
@@ -10,9 +10,15 @@ lex_example:
 	gcc -c src/dfa/statequeue.c
 	gcc -c src/dfa/transition.c
 	gcc -c src/lexgen.c
-	gcc -c src/lex_rules.c
+	gcc -c src/tokenrules.c
 	gcc -c src/util.c
 	gcc -c src/readconfig.c
 	gcc -c src/mgclex.c
 	gcc *.o -o mgclex
+
+install:
+	cp ./mgclex /usr/local/bin/mgclex
+
+clean:
 	rm *.o
+	rm mgclex

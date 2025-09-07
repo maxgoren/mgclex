@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lex_rules.h"
+#include "tokenrules.h"
 #include "readconfig.h"
 
 
