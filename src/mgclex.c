@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
 }
 
 void generateLexer(char* specfile, char* outfile) {
+    printf("[*] Reading MGCLex Spec file...\n");
     readConfig(specfile);
     printf("[*] Initializing...\n");
     CombinedRE* cre = init_lexer_patterns(num_rules);

@@ -35,7 +35,7 @@ void dfstool(DFA* dfa, int matrix[][256]) {
         for (int j = 0; j < 256; j++)
             matrix[i][j] = 0;
     for (int i = 1; i <= dfa->numstates; i++) {
-        dfsmat(dfa->states[i]->transitions, i, matrix);
+        dfs(dfa->states[i]->transitions, i, matrix);
     }
 }
 
@@ -92,49 +92,4 @@ void writeAccept(FILE* fd, DFA* dfa) {
         if (i < dfa->numstates) fprintf(fd,",\n");
     }
     fprintf(fd, "\n};\n");
-}
-
-
-
-
-void __dfa2json(DFA* dfa) {
-    FILE* fd = fopen("table_gen.trans", "w+");
-    fprintf(fd, "{\n  \"DFA\": [\n");
-    int i;
-    for (i = 1; i < dfa->numstates; i++) {
-        serialize_dfa_state(dfa->states[i], i, fd);
-        fprintf(fd, ",\n");
-    }
-    serialize_dfa_state(dfa->states[i], i, fd);
-    fprintf(fd, "\n\t]\n}\n");
-    fclose(fd);
-}
-
-void serialize_dfa_state(DFAState* state, int from, FILE* fd) {
-    if (state == NULL)
-        return;
-    Transition* st[255];
-    int stsp = 0;
-    int tc = 0;
-    fprintf(fd, "\t\t{\n\t\t\t\"state\": %d,\n\t\t\t\"accepting\": %s,\n\t\t\t\"transitions\":  [", from, state->is_accepting ? "true":"false");
-    Transition* it = state->transitions;
-    while (it != NULL) {
-        st[++stsp] = it;
-        it = it->left;
-    }
-    if (stsp > 0) fprintf(fd, "\n");
-    while (stsp > 0) {
-        it = st[stsp--];
-        if (it != NULL) {
-            fprintf(fd, "\t\t\t\t{ \"symbol\": \"%c\", \"destination\": %d }", it->ch, it->to);
-            tc++;
-            it = it->right;
-            while (it != NULL) {
-                st[++stsp] = it;
-                it = it->left;
-            }
-        }
-        if (stsp > 0) fprintf(fd, ",\n");
-    }
-    fprintf(fd, " ]\n\t\t}");
 }

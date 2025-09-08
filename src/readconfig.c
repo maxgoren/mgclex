@@ -38,13 +38,14 @@ void readConfig(char* filename) {
         while (fgets(buffer, sizeof(buffer), fd)) {
             int pos = 1;
             char *pat = extractPattern(buffer, &pos);
-            printf("Pattern: %s\n", pat);
+            //printf("Pattern: %s\n", pat);
             char* symbol = extractSymbol(buffer, pos);
-            printf("Symbol: %s\n", symbol);
+            //printf("Symbol: %s\n", symbol);
             int id = registerSymbol(symbol);
             addTokenRule(pat, id);
-            printf("\n-----------\n");
+            //printf("\n-----------\n");
         }
+        printf("Read: %d Rules for %d Symbols\n", num_rules, num_symbols);
         fclose(fd);
     } else {
         printf("Error: could not open specification file '%s' for reading.\n", filename);

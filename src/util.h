@@ -11,10 +11,11 @@ extern "C" {
 void dfa2matrix(DFA* d, char* filename, char* symbols[], int num_symbols);
 void dfs(Transition* t, int s, int mat[][256]);
 void dfstool(DFA* d, int matrix[][256]);
-
-///experimental
-void __dfa2json(DFA* d);
-void serialize_dfa_state(DFAState* state, int from, FILE* fd);
+void writeHeader(FILE* fd);
+void writeFooter(FILE* fd);
+void writeEnum(FILE* fd, char* symbols[], int ns);
+void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]);
+void writeAccept(FILE* fd, DFA* dfa);
 
 #ifdef __cplusplus
 }
