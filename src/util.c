@@ -6,12 +6,17 @@ void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
     int matrix[dfa->numstates+1][256];
     dfstool(dfa, matrix);
     FILE* fd = fopen(filename, "w+");
-    writeHeader(fd);
-    writeEnum(fd, symbols, num_symbols);
-    writeMatrix(fd, dfa, matrix);
-    writeAccept(fd, dfa);
-    writeFooter(fd);
-    fclose(fd);
+    if (fd != NULL) {
+        writeHeader(fd);
+        writeEnum(fd, symbols, num_symbols);
+        writeMatrix(fd, dfa, matrix);
+        writeAccept(fd, dfa);
+        writeFooter(fd);
+        fclose(fd);
+    } else {
+        printf("Error: couldn't open '%s' for writing", filename);
+        exit(EXIT_FAILURE);
+    }
 }
 
 

@@ -30,19 +30,24 @@ char* extractSymbol(char* tmp, int pos) {
 
 
 void readConfig(char* filename) {
-    FILE* fd = fopen(filename, "r");
     char buffer[512];
-    initTokenRulesVec();
-    initSymbolSet();
-    while (fgets(buffer, sizeof(buffer), fd)) {
-        int pos = 1;
-        char *pat = extractPattern(buffer, &pos);
-        printf("Pattern: %s\n", pat);
-        char* symbol = extractSymbol(buffer, pos);
-        printf("Symbol: %s\n", symbol);
-        int id = registerSymbol(symbol);
-        addTokenRule(pat, id);
-        printf("\n-----------\n");
+    FILE* fd = fopen(filename, "r");
+    if (fd != NULL) {
+        initTokenRulesVec();
+        initSymbolSet();
+        while (fgets(buffer, sizeof(buffer), fd)) {
+            int pos = 1;
+            char *pat = extractPattern(buffer, &pos);
+            printf("Pattern: %s\n", pat);
+            char* symbol = extractSymbol(buffer, pos);
+            printf("Symbol: %s\n", symbol);
+            int id = registerSymbol(symbol);
+            addTokenRule(pat, id);
+            printf("\n-----------\n");
+        }
+        fclose(fd);
+    } else {
+        printf("Error: could not open specification file '%s' for reading.\n", filename);
+        exit(EXIT_FAILURE);
     }
-    fclose(fd);
 }
