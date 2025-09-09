@@ -4,7 +4,8 @@
 #include "util.h"
 #include "tokenrules.h"
 #include "readconfig.h"
-#define VERSION 1.0
+#define MAJ_VERSION 1
+#define MIN_VERSION 0
 
 void showUsage();
 void generateLexer(char* specfilename, char* outfilename);
@@ -38,9 +39,8 @@ void generateLexer(char* specfile, char* outfile) {
 }
 
 void showUsage() {
-    printf("MGCLex v%f, The no-frills lexer generator.\n", VERSION);
+    printf("MGCLex v%d.%d, The no-frills lexer generator. (c) 2025 MaxGCoding.com\n", MAJ_VERSION, MIN_VERSION);
     printf("Usage:\n");
-    printf("\t mgclex <spec file name> <output file name>\n");
-    printf("\n");
+    printf("\t mgclex <spec file name> [output file name]\n");
     printf("\n");
 }
