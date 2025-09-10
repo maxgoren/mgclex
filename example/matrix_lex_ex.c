@@ -3,10 +3,11 @@
 #include <string.h>
 #include "mgclex_matrix.h"
 
-typedef struct {
+typedef struct Token_ {
     enum TKSymbol symbol;
     char* text;
     int length;
+    struct Token_* next;
 } Token;
 
 Token* makeLexToken(enum TKSymbol symbol, char* text, int length) {
@@ -44,22 +45,31 @@ Token* next_token(char* input) {
 }
 
 
-void tokenize_input(char* input) {
+Token* tokenize_input(char* input) {
+    Token head; Token* list = &head;
     for (int i = 0; i < strlen(input);) {
         while (input[i] == ' ' || input[i] == '\t' || input[i] == '\r' || input[i] == '\n') i++;
         Token* next = next_token(input+i);
         if (next != NULL) {
-            printf("<%s, %s>\n", symbolStr[next->symbol], next->text);
             i += next->length;
+            list->next = next;
+	    list = next;
         } else {
             i++;
         }
     }
+    return head.next;
+}
+
+void printTokens(Token* head) {
+	for (Token* it = head; it != NULL; it = it->next) 
+		printf("<%d, %s>\n", it->symbol, it->text);
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 2)
        return 0;
-    tokenize_input(argv[1]);
+    Token* tokens = tokenize_input(argv[1]);
+    printTokens(tokens);
     return 0;
 }
