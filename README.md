@@ -1,20 +1,18 @@
 # MGCLex
 
-MGCLex is a lexical analyzer generator utilizing 
-the Aho, Sethi, Ullman Direct DFA Construction to
-quickly and painlessly generate a DFA based lexer
-for fast string tokenization.
+MGCLex is a lexical analyzer generator utilizing the Aho, Sethi, Ullman Direct DFA Construction to
+quickly and painlessly generate a DFA based lexer for fast string tokenization.
 
 ## How To Use MGCLex
 
 ### Installing MGCLex
 
-MGCLex can be built by cloning this repository to your local machine and typing 
+MGCLex can be built on linux/BSD using `make` by cloning this repository to your local machine and typing 
 at the command line in the directory you cloned to:
 
       make && sudo make install && make clean
 
-This will automatically build and install MGCLex using your systems 'make' system.
+This will automatically build and install MGCLex.
 
 ### Spec Files 
  
