@@ -73,13 +73,8 @@ REToken* tokenize(char* str) {
                     t = t->next; 
                 } break;
                 case '*': { 
-                    if (str[i-1] != '\\') {
-                        t->next = makeToken(RE_STAR, str[i]);
-                        t = t->next;
-                    } else {
-                        t->next = makeToken(RE_CHAR, '*');
-                        t = t->next;
-                    }
+                    t->next = makeToken(RE_STAR, str[i]);
+                    t = t->next;
                 } break;
                 case '?': { 
                     t->next = makeToken(RE_QUESTION, str[i]);
