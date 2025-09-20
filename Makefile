@@ -2,6 +2,7 @@ mgclex:
 	gcc -c src/dfa/re2ast/src/ast.c
 	gcc -c src/dfa/re2ast/src/parser.c
 	gcc -c src/dfa/re2ast/src/tokens.c 
+	gcc -c src/dfa/build_dfa.c
 	gcc -c src/dfa/dfa.c
 	gcc -c src/dfa/dfastate.c
 	gcc -c src/dfa/followpos.c

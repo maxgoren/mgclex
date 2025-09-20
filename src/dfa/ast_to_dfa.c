@@ -1,5 +1,6 @@
 #include "ast_to_dfa.h"
 #include "re2ast/src/ast.h"
+#include "build_dfa.h"
 
 void cleanup(DFA* dfa, re_ast* ast) {
     freeTree(ast);
