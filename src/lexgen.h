@@ -5,7 +5,7 @@ extern "C" {
 #endif
 #include "dfa/re2ast/src/ast.h"
 #include "dfa/re2ast/src/parser.h"
-#include "dfa/re_to_dfa.h"
+#include "dfa/ast_to_dfa.h"
 
 typedef struct {
     char* pattern;

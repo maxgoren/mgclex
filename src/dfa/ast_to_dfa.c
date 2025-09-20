@@ -1,4 +1,4 @@
-#include "re_to_dfa.h"
+#include "ast_to_dfa.h"
 #include "re2ast/src/ast.h"
 
 void cleanup(DFA* dfa, re_ast* ast) {

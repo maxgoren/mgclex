@@ -6,7 +6,7 @@ mgclex:
 	gcc -c src/dfa/dfastate.c
 	gcc -c src/dfa/followpos.c
 	gcc -c src/dfa/intset.c
-	gcc -c src/dfa/re_to_dfa.c
+	gcc -c src/dfa/ast_to_dfa.c
 	gcc -c src/dfa/statequeue.c
 	gcc -c src/dfa/transition.c
 	gcc -c src/lexgen.c
