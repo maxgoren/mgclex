@@ -5,4 +5,3 @@
 {"/", TK_DIV}
 {"\(", TK_LPAREN}
 {"\)", TK_RPAREN}
-{"<eoi>", TK_EOI}

@@ -27,4 +27,3 @@
 {";", TK_SEMI}
 {",", TK_COMMA}
 {"\".*\"", TK_STRING}
-{"<fin.>", TK_EOI}

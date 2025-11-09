@@ -54,14 +54,12 @@ void writeEnum(FILE* fd, char* symbols[], int num_symbols) {
     int j = 0;
     while (j < num_symbols) {
         fprintf(fd, "%s", symbols[j]);
-        if (j+1 < num_symbols) {
             fprintf(fd, ",");
             if (j % 5 == 0)
                 fprintf(fd, "\n");
-        }
         j++;
     }
-    fprintf(fd, "\n};\n");
+    fprintf(fd, " TK_EOI\n};\n");
 }
 
 void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {

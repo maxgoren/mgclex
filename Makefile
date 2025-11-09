@@ -23,3 +23,22 @@ install:
 clean:
 	rm *.o
 	rm mgclex
+
+debug:
+	gcc -DDEBUG -g -c src/dfa/re2ast/src/ast.c
+	gcc -DDEBUG -g -c src/dfa/re2ast/src/parser.c
+	gcc -DDEBUG -g -c src/dfa/re2ast/src/tokens.c 
+	gcc -DDEBUG -g -c src/dfa/build_dfa.c
+	gcc -DDEBUG -g -c src/dfa/dfa.c
+	gcc -DDEBUG -g -c src/dfa/dfastate.c
+	gcc -DDEBUG -g -c src/dfa/followpos.c
+	gcc -DDEBUG -g -c src/dfa/intset.c
+	gcc -DDEBUG -g -c src/dfa/ast_to_dfa.c
+	gcc -DDEBUG -g -c src/dfa/statequeue.c
+	gcc -DDEBUG -g -c src/dfa/transition.c
+	gcc -DDEBUG -g -c src/lexgen.c
+	gcc -DDEBUG -g -c src/tokenrules.c
+	gcc -DDEBUG -g -c src/util.c
+	gcc -DDEBUG -g -c src/readconfig.c
+	gcc -DDEBUG -g -c src/mgclex.c
+	gcc -DDEBUG *.o -o mgclex

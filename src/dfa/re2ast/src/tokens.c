@@ -31,7 +31,7 @@ bool is_char(char c) {
 }
 
 bool is_special(char c) {
-    return (((int)c > 32 && c < 48) || 
+    return (((int)c >= 32 && c < 48) || 
             ((int)c > 57 && (int)c < 65)) || 
             (((int)c > 90 && (int)c < 97) || 
             ((int)c > 122 && (int)c < 127));
@@ -53,8 +53,11 @@ REToken* tokenize(char* str) {
                 t = t->next;
             }
         } else if (str[i] == '.') {
-            t->next = makeToken(RE_PERIOD, str[i]);
+            t->next = makeToken(RE_CCL, '[');
             t = t->next;
+            t->ccl = malloc(sizeof(char)*256);
+            for (int i = 0, j = 32; j < 127; i++, j++)
+                t->ccl[i] = (char)j;
         } else if (is_digit(str[i]) || is_char(str[i])) {
             t->next = makeToken(RE_CHAR, str[i]);
             t = t->next;
