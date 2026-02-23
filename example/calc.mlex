@@ -5,3 +5,5 @@
 {"/", TK_DIV}
 {"\(", TK_LPAREN}
 {"\)", TK_RPAREN}
+{"print", TK_PRINT}
+{"[A-Za-z]+", TK_ID}

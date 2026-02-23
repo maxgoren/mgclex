@@ -32,7 +32,7 @@ void generateLexer(char* specfile, char* outfile) {
     printf("[*] Compiling DFA...\n");
     DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table);
     printf("[*] Writing matrix and accept states to %s\n", outfile);
-    dfa2matrix(&dfa, outfile, symbols, num_symbols);
+    dfa2matrix(&dfa, outfile, symbols, num_symbols, 1);
     printf("[*] Cleaning up...\n");
     freeDFA(&dfa);
     printf("[*] Complete!\n");

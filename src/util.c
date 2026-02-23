@@ -2,13 +2,13 @@
 
 
 //outputs DFA as a 2d matrix and accept table as a header file
-void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols) {
+void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr) {
     int matrix[dfa->numstates+1][256];
     dfstool(dfa, matrix);
     FILE* fd = fopen(filename, "w+");
     if (fd != NULL) {
         writeHeader(fd);
-        writeEnum(fd, symbols, num_symbols);
+        writeEnum(fd, symbols, num_symbols, asStr);
         writeMatrix(fd, dfa, matrix);
         writeAccept(fd, dfa);
         writeFooter(fd);
@@ -50,7 +50,20 @@ void writeFooter(FILE* fd) {
     fprintf(fd, "\n#endif");
 }
 
-void writeEnum(FILE* fd, char* symbols[], int num_symbols) {
+void writeSymbolsAsStrings(FILE* fd, char* symbols[], int num_symbols) {
+    fprintf(fd, "char* tokenStr[] = {\n");
+    int j = 0;
+    while (j < num_symbols) {
+        fprintf(fd, "\"%s\"", symbols[j]);
+        fprintf(fd, ",");
+        if (j % 5 == 0)
+            fprintf(fd, "\n");
+        j++;
+    }
+    fprintf(fd, " \"TK_EOI\"\n};\n");
+}
+
+void writeEnum(FILE* fd, char* symbols[], int num_symbols, int asStrings) {
     fprintf(fd, "enum TKSymbol {\n");
     int j = 0;
     while (j < num_symbols) {
@@ -61,6 +74,9 @@ void writeEnum(FILE* fd, char* symbols[], int num_symbols) {
         j++;
     }
     fprintf(fd, " TK_EOI\n};\n");
+    if (asStrings > 0) {
+        writeSymbolsAsStrings(fd, symbols, num_symbols);
+    }
 }
 
 void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
