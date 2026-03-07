@@ -51,7 +51,7 @@ void writeFooter(FILE* fd) {
 }
 
 void writeSymbolsAsStrings(FILE* fd, char* symbols[], int num_symbols) {
-    fprintf(fd, "char* tokenStr[] = {\n");
+    fprintf(fd, "const char* tokenStr[] = {\n");
     int j = 0;
     while (j < num_symbols) {
         fprintf(fd, "\"%s\"", symbols[j]);
