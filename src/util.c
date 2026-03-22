@@ -80,7 +80,7 @@ void writeEnum(FILE* fd, char* symbols[], int num_symbols, int asStrings) {
 }
 
 void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
-    fprintf(fd, "int matrix[%d][256] = {\n", dfa->numstates+1);
+    fprintf(fd, "int mgc_lex_matrix[%d][256] = {\n", dfa->numstates+1);
     int i = 0;
     for (i = 0; i <= dfa->numstates; i++) {
         fprintf(fd, "\t{ ");
@@ -97,7 +97,7 @@ void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
 }
 
 void writeAccept(FILE* fd, DFA* dfa) {
-    fprintf(fd, "int accept[%d] = {\n", dfa->numstates+1);
+    fprintf(fd, "int mgc_lex_accept[%d] = {\n", dfa->numstates+1);
     for (int i = 0; i <= dfa->numstates; i++) {
         if (dfa->states[i] != NULL && dfa->states[i]->is_accepting) {
             fprintf(fd, "\t%d", rules[dfa->states[i]->token_id].token);
