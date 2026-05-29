@@ -4,8 +4,12 @@
 #include "tokenrules.h"
 #include "readconfig.h"
 
+bool isWhitespace(char c) {
+    return c == ' ' || c == '\t';
+}
+
 void skipWs(char* str, int* pos) {
-    while (str[*pos] == ' ') *pos++;
+    while (isWhitespace(str[*pos])) *pos++;
 }
 
 char* extractPattern(char* str, int* pos) {

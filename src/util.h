@@ -9,8 +9,8 @@ extern "C" {
 #include "lexgen.h"
 
 void dfa2matrix(DFA* d, char* filename, char* symbols[], int num_symbols, int asStr);
+void DFS(DFA* d, int matrix[][256]);
 void dfs(Transition* t, int s, int mat[][256]);
-void dfstool(DFA* d, int matrix[][256]);
 void writeHeader(FILE* fd);
 void writeFooter(FILE* fd);
 void writeSymbolsAsStrings(FILE* fd, char* symbols[], int ns);

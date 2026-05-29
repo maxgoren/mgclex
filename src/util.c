@@ -4,7 +4,7 @@
 //outputs DFA as a 2d matrix and accept table as a header file
 void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr) {
     int matrix[dfa->numstates+1][256];
-    dfstool(dfa, matrix);
+    DFS(dfa, matrix);
     FILE* fd = fopen(filename, "w+");
     if (fd != NULL) {
         writeHeader(fd);
@@ -30,7 +30,7 @@ void dfs(Transition* t, int s, int mat[][256]) {
 }
 
 //Initialize matrix and call DFS on each states transitions
-void dfstool(DFA* dfa, int matrix[][256]) {
+void DFS(DFA* dfa, int matrix[][256]) {
     for (int i = 0; i < dfa->numstates+1; i++)
         for (int j = 0; j < 256; j++)
             matrix[i][j] = 0;

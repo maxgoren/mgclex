@@ -10,17 +10,28 @@ void initSymbolSet() {
     symbols = (char**)malloc(sizeof(char*)*sym_cap);
 }
 
-int registerSymbol(char* symbol) {
+int symbolExists(char* symbol) {
     for (int i = 0; i < num_symbols; i++) {
         if (strcmp(symbol, symbols[i]) == 0)
             return i;
     }
+    return -1;
+}
+
+void resizeVector() {
+    char** tmp = symbols;
+    symbols = (char**)malloc(sizeof(char*)*(2*sym_cap));
+    for (int i = 0; i < num_symbols; i++)
+        symbols[i] = tmp[i];
+    sym_cap *= 2;
+}
+
+int registerSymbol(char* symbol) {
+    int symnum = -1;
+    if ((symnum = symbolExists(symbol)) != -1)
+        return symnum;
     if (num_symbols+1 == sym_cap) {
-        char** tmp = symbols;
-        symbols = (char**)malloc(sizeof(char*)*(2*sym_cap));
-        for (int i = 0; i < num_symbols; i++)
-            symbols[i] = tmp[i];
-        sym_cap *= 2;
+        resizeVector();
     }
     symbols[num_symbols++] = symbol;
     printf("Registered %s at %d\n", symbol, num_symbols);
@@ -37,16 +48,25 @@ void initTokenRulesVec() {
     rules = (TokenRule*)malloc(sizeof(TokenRule)*capacity);
 }
 
+void resizeRuleVector() {
+    TokenRule* tmp = rules;
+    rules = (TokenRule*)malloc(sizeof(TokenRule)*(2*capacity));
+    if (rules == NULL) {
+        printf("Error: out of memory trying to add token rule.\n");
+        rules = tmp;
+        return;
+    }
+    for (int i = 0; i < num_rules; i++) {
+        rules[i].pattern = tmp[i].pattern;
+        rules[i].token = tmp[i].token;
+    }
+    capacity *= 2;
+    free(tmp);
+}
+
 void addTokenRule(char* pattern, int id) {
     if (num_rules+1 == capacity) {
-        TokenRule* tmp = rules;
-        rules = (TokenRule*)malloc(sizeof(TokenRule)*(2*capacity));
-        for (int i = 0; i < num_rules; i++) {
-            rules[i].pattern = tmp[i].pattern;
-            rules[i].token = tmp[i].token;
-        }
-        capacity *= 2;
-        free(tmp);
+        resizeRuleVector();
     }
     rules[num_rules].pattern = pattern;
     rules[num_rules].token = id;
