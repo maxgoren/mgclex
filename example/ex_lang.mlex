@@ -25,5 +25,5 @@
 {"<=", TK_LTE}
 {";", TK_SEMI}
 {",", TK_COMMA}
-{"[A-Za-z][A-Za-z0-9_]+", TK_ID}
+{"[A-Za-z][A-Za-z0-9_]*", TK_ID}
 {"["]([A-Za-z]+)["]", TK_STRING}

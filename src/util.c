@@ -2,14 +2,18 @@
 
 
 //outputs DFA as a 2d matrix and accept table as a header file
-void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr) {
+void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr, bool compressTable) {
     int matrix[dfa->numstates+1][256];
     DFS(dfa, matrix);
     FILE* fd = fopen(filename, "w+");
     if (fd != NULL) {
         writeHeader(fd);
         writeEnum(fd, symbols, num_symbols, asStr);
-        writeMatrix(fd, dfa, matrix);
+        if (compressTable) {
+            writePairCompressedMatrix(fd, dfa, matrix);
+        } else {
+            writeUnCompressedMatrix(fd, dfa, matrix);
+        }
         writeAccept(fd, dfa);
         writeFooter(fd);
         fclose(fd);
@@ -78,14 +82,57 @@ void writeEnum(FILE* fd, char* symbols[], int num_symbols, int asStrings) {
         writeSymbolsAsStrings(fd, symbols, num_symbols);
     }
 }
+int entryCount(int matrix[][256], int i) {
+    int count = 0;
+    for (int j = 0; j < 255; j++) {
+        if (matrix[i][j] != 0) {
+            count++;
+        }
+    }
+    return count;
+}
 
-void writeMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
+void writePairCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
+    int realrows[dfa->numstates];
+    int i = 0;
+    for (i = 0; i <= dfa->numstates; i++) {
+        int numEnt = entryCount(matrix, i);
+        if (numEnt) {
+            fprintf(fd, "static const int mgc_lexer_matrix_row%d[] = { %d, ",i, numEnt);
+            for (int j = 0; j < 255; j++) {
+                if (matrix[i][j] != 0) {
+                    fprintf(fd, " %d,%d, ", j, matrix[i][j]);
+                }
+            }
+            fprintf(fd, "0};\n");
+            realrows[i] = i;
+        } else {
+            realrows[i] = -1;
+        }   
+    }
+    fprintf(fd, "static const int *mgc_lexer_matrix[] = {\n");
+    for (int i = 0; i < dfa->numstates; i++) {
+        if (realrows[i] == -1) {
+            fprintf(fd, "NULL");
+        } else {
+            fprintf(fd, "mgc_lexer_matrix_row%d", realrows[i]);
+        }
+        if (i+1 < dfa->numstates) {
+            fprintf(fd, ",\n");
+        } else {
+            fprintf(fd, "\n");
+        }
+    }
+    fprintf(fd, "};\n\n");
+}
+
+void writeUnCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
     fprintf(fd, "int mgc_lex_matrix[%d][256] = {\n", dfa->numstates+1);
     int i = 0;
     for (i = 0; i <= dfa->numstates; i++) {
-        fprintf(fd, "\t{ ");
+        fprintf(fd, "\t{");
         for (int j = 0; j < 255; j++) {
-            fprintf(fd, "%d, ", matrix[i][j]);
+                fprintf(fd, " %d, ", matrix[i][j]);
         }
         if (i+1 == 256)
             fprintf(fd, "0}\n");

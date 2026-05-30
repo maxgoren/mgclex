@@ -22,12 +22,28 @@ Token* makeLexToken(enum TKSymbol symbol, char* text, int length) {
     return tk;
 }
 
+/* for use with pair compressed tables */
+int get_next_compressed(int state, char p) {
+    if (mgc_lexer_matrix[state]) {
+        for (int i = 1; i < 2*mgc_lexer_matrix[state][0]; i += 2) {
+            if (mgc_lexer_matrix[state][i] == p)
+                return mgc_lexer_matrix[state][i+1];
+        }
+    }
+    return 0;
+}
+
+/* for use with uncompressed matrix, O(1) lookup 
+int get_next_fast(int state, char p) {
+    return mgc_lex_matrix[state][p];
+}
+*/
 Token* next_token(char* input) {
     int state = 1;
     int last_match = 0;
     int match_len = 0;
     for (char* p = input; *p; *p++) {
-        state = mgc_lex_matrix[state][*p];
+        state = get_next_compressed(state, *p);
         printf("%d -> ", state);
         if (state > 0 && mgc_lex_accept[state] > -1) {
             last_match = state;
