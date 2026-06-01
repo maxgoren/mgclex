@@ -111,13 +111,13 @@ void writePairCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
         }   
     }
     fprintf(fd, "static const int *mgc_lexer_matrix[] = {\n");
-    for (int i = 0; i < dfa->numstates; i++) {
+    for (int i = 0; i <= dfa->numstates; i++) {
         if (realrows[i] == -1) {
             fprintf(fd, "NULL");
         } else {
             fprintf(fd, "mgc_lexer_matrix_row%d", realrows[i]);
         }
-        if (i+1 < dfa->numstates) {
+        if (i+1 <= dfa->numstates) {
             fprintf(fd, ",\n");
         } else {
             fprintf(fd, "\n");
