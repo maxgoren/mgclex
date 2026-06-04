@@ -50,3 +50,17 @@ your specification could look like this:
 Will output a header file, mylexer.h, which contains your DFA's transition matrix
 and accept table. The file "matrix_lex_ex.c" in the example folder demonstrates using
 the generated header to impelement a maximal-munch tokenizer.
+
+## Compressed & Un-compressed Tables
+
+You have the choice two output two types of matrix, a raw uncompressed matrix
+and a pair-compressed matrix which only stores valid transitions in a compressed format.
+
+```
+      mgclex <filename> [optional_output_filename] [-c]
+```
+The -c flag at the end is optional and can be used with or without a user defined output name,
+so if you want to use the default output name  but still compress the table you would use
+```
+      mgclex <filename> -c
+```
