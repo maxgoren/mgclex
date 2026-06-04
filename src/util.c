@@ -127,7 +127,7 @@ void writePairCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
 }
 
 void writeUnCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
-    fprintf(fd, "int mgc_lex_matrix[%d][256] = {\n", dfa->numstates+1);
+    fprintf(fd, "int mgc_lexer_matrix[%d][256] = {\n", dfa->numstates+1);
     int i = 0;
     for (i = 0; i <= dfa->numstates; i++) {
         fprintf(fd, "\t{");
