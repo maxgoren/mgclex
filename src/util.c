@@ -55,7 +55,7 @@ void writeFooter(FILE* fd) {
 }
 
 void writeSymbolsAsStrings(FILE* fd, char* symbols[], int num_symbols) {
-    fprintf(fd, "const char* tokenStr[] = {\n");
+    fprintf(fd, "static const char* tokenStr[] = {\n");
     int j = 0;
     while (j < num_symbols) {
         fprintf(fd, "\"%s\"", symbols[j]);
@@ -144,7 +144,7 @@ void writeUnCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
 }
 
 void writeAccept(FILE* fd, DFA* dfa) {
-    fprintf(fd, "int mgc_lex_accept[%d] = {\n", dfa->numstates+1);
+    fprintf(fd, "static const int mgc_lex_accept[%d] = {\n", dfa->numstates+1);
     for (int i = 0; i <= dfa->numstates; i++) {
         if (dfa->states[i] != NULL && dfa->states[i]->is_accepting) {
             fprintf(fd, "\t%d", rules[dfa->states[i]->token_id].token);
