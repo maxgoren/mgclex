@@ -94,10 +94,13 @@ REToken* tokenize(char* str) {
                 case '[': {
                     t->next = makeToken(RE_CCL, '[');
                     t = t->next;
+                    bool negated = false;
                     char* ccl = t->ccl;
                     i++;
                     if (str[i] == '-') {
                         *ccl++ = str[i++];
+                    } else if (str[i] == '^') {
+                        negated = true;
                     }
                     while (str[i] != ']') {
                         char start = str[i++];
@@ -110,6 +113,22 @@ REToken* tokenize(char* str) {
                         } else {
                             *ccl++ = start;
                         }
+                    }
+                    // This is far from ideal - O(k*n^2) so...
+                    // you problaly want to use this sparingly.
+                    if (negated) {
+                        char* nccl = malloc(sizeof(char)*128);
+                        int p = 0;
+                        for (int i = 27; i < 127; i++) {
+                            bool include = true;
+                            for (int j = 0; t->ccl[j]; j++) {
+                                if (t->ccl[j] == (char)i)
+                                    include = false;
+                            }
+                            if (include) nccl[p++] = (char)i;
+                        }
+                        free(t->ccl);
+                        t->ccl = nccl;
                     }
                     break;
                 }
