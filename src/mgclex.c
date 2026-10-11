@@ -34,20 +34,6 @@ int main(int argc, char* argv[]) {
 }
 
 
-DFA minimize(DFA dfa) {
-    //step 1, partition states into accepting and not accepting sets.
-    Set accepting, notAccepting;
-    initSet(&accepting, dfa.numstates);
-    initSet(&notAccepting, dfa.numstates);
-    for (int i = 1; i <= dfa.numstates; i++) {
-        if (dfa.states[i]->is_accepting) {
-            setAdd(&accepting, i);
-        } else {
-            setAdd(&notAccepting, i);
-        }
-    }
-}
-
 void generateLexer(char* specfile, char* outfile, bool compressTables) {
     printf("[*] Reading MGCLex configuration file...\n");
     readConfig(specfile);
