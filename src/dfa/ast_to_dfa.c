@@ -23,5 +23,6 @@ DFA ast2dfa(char* re, re_ast* ast, re_ast*** ast_node_table) {
     computeFollowPos(ast, ast_node_table);
     char* no_concat = toString(in2post(tokenize(re)));
     DFA dfa = buildDFA(ast, no_concat, *ast_node_table);
-    return dfa;
+    DFA result = minimize(dfa, *ast_node_table);
+    return result;
 }

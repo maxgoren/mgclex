@@ -16,10 +16,11 @@ extern "C" {
 typedef struct {
     DFAState** states;
     int numstates;
+    char* alphabet;
 } DFA;
 
 
-void initDFA(DFA* dfa, int numstates);
+void initDFA(DFA* dfa, int numstates, char* alphabet);
 void printDFA(DFA dfa);
 void freeDFA(DFA* dfa);
 
