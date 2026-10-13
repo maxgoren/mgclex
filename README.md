@@ -61,7 +61,19 @@ and a pair-compressed matrix which only stores valid transitions in a compressed
       mgclex <filename> [optional_output_filename] [-c]
 ```
 The -c flag at the end is optional and can be used with or without a user defined output name,
+
 so if you want to use the default output name  but still compress the table you would use
 ```
       mgclex <filename> -c
 ```
+## Minimal State DFA
+
+Though the dfa's created with aho, sethi, ullman direct-to-dfa algorithm are already pretty minimal, the -m flag
+will do an additional step of running the DFA through a set partition refinement process (Moores Algorithm) to ensure
+the resulting DFA has the minimal number of states. This can be used with both pair compressed and uncompressed matrixes, 
+as the DFA is reduced before hand.
+
+```
+      mgclex <filename> [optional_output_filename] [-c] [-m]
+```
+
