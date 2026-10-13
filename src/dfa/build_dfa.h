@@ -11,6 +11,6 @@ int findStateByPositions(DFA* dfa, Set* next_states);
 int symbolIsInAlphabet(char* str, int n, char c);
 DFA buildDFA(re_ast* ast, char* re, re_ast** ast_node_table);
 DFAState* markAcceptState(DFAState* state, re_ast** ast_node_table);
-
+DFA minimize(DFA dfa, re_ast** ast_node_table);
 
 #endif

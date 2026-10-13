@@ -1,8 +1,11 @@
 #include "dfa.h"
 
-void initDFA(DFA* dfa, int numstates) {
+void initDFA(DFA* dfa, int numstates, char* alphabet) {
     dfa->numstates = 0;
     dfa->states = malloc(sizeof(DFAState*)*numstates+1);
+    for (int i = 0; i < numstates+1; i++)
+        dfa->states[i] = NULL;
+    dfa->alphabet = alphabet;
 }
 
 void printDFA(DFA dfa) {

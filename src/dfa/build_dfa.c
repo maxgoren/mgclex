@@ -61,7 +61,7 @@ DFA buildDFA(re_ast* ast, char* re, re_ast** ast_node_table) {
     DFA dfa;
     StateQueue fq;
     initAlphabet(alphabet, re);
-    initDFA(&dfa,numleaves+1);
+    initDFA(&dfa,numleaves+1, alphabet);
     addState(&dfa, createState(nextStateNum(&dfa), copySet(ast->firstpos)));
     initQueue(&fq);
     enQueue(&fq,  dfa.states[1]);
@@ -137,4 +137,141 @@ void initAlphabet(char* alphabet,  char* re) {
 #ifdef DEBUG
     printf("Alphabet: %s \n", alphabet);
 #endif
+}
+
+int map_old_dest(Set* groups[], int numgroups, int old) {
+    for (int i = 0; i < numgroups; i++) {
+        int t = setContains(groups[i], old);
+        if (t != -1)
+            return i;
+    }
+    return -1;
+}
+DFA minimize(DFA dfa, re_ast** ast_node_table) {
+    Set* groups[512];
+    int numgroups = 0;
+    char* alphabet = dfa.alphabet;
+    
+    groups[0] = createSet(255);
+    numgroups = 1;
+    
+    int token_to_group[512];
+    int in_group[512];
+    for (int i = 0; i < 512; i++) { 
+        token_to_group[i] = -1;
+        in_group[i] = -1;
+    }
+    
+    // partitioning based on token_id
+    for (int i = 1; i <= dfa.numstates; i++) {
+        int tid = dfa.states[i]->token_id;
+        if (tid == -1) {
+            setAdd(groups[0], i);
+            in_group[i] = 0;
+        } else {
+            if (token_to_group[tid] == -1) {
+                groups[numgroups] = createSet(255);
+                token_to_group[tid] = numgroups;
+                numgroups++;
+            }
+            int target_group = token_to_group[tid];
+            setAdd(groups[target_group], i);
+            in_group[i] = target_group;
+        }
+    }
+    
+    bool did_change = false;
+    do {
+        did_change = false;
+        int current_limit = numgroups;
+        
+        for (int i = 0; i < current_limit; i++) {
+            if (groups[i]->n < 2) continue; // singletons cannot be split
+            
+            Set* newgroup = createSet(255);
+            int first = groups[i]->members[0];
+            int next = groups[i]->members[1];
+            int spt = 2;
+            
+            while (next != 0) {
+                bool split_element = false;
+                for (int j = 0; alphabet[j]; j++) {
+                    Transition* ftr = findTransition(dfa.states[first]->transitions, alphabet[j]);
+                    Transition* gtr = findTransition(dfa.states[next]->transitions, alphabet[j]);
+                    int fg = (ftr != NULL) ? in_group[ftr->to] : -1;
+                    int ng = (gtr != NULL) ? in_group[gtr->to] : -1;
+                    
+                    if (fg != ng) {
+                        split_element = true;
+                        break; 
+                    }
+                }
+                
+                if (split_element) {
+                    setAdd(newgroup, next);
+                }
+                
+                next = (spt < groups[i]->n) ? groups[i]->members[spt++] : 0;
+            }
+            
+            if (!isSetEmpty(newgroup)) {
+                for (int t = 0; t < newgroup->n; t++) {
+                    int state_to_move = newgroup->members[t];
+                    setErase(groups[i], state_to_move);
+                    in_group[state_to_move] = numgroups;
+                }
+                groups[numgroups] = newgroup;
+                numgroups++;
+                did_change = true;
+            }
+        }
+    } while (did_change);
+    
+    DFA result;
+    initDFA(&result, numgroups + 1, alphabet);
+    
+    for (int g = 0; g < numgroups; g++) {
+        Set* positions = createSet(255);
+        for (int m = 0; m < groups[g]->n; m++) {
+            positions = setUnion(positions, dfa.states[groups[g]->members[m]]->positions);
+        }
+        result.states[g + 1] = createState(g + 1, positions);
+        result.numstates++;
+    }
+    
+    // Reconstruct Transitions
+    for (int i = 0; i < numgroups; i++) {
+        if (groups[i]->n == 0) continue;
+        int rep = groups[i]->members[0];
+        for (int j = 0; alphabet[j]; j++) {
+            Transition* tt = findTransition(dfa.states[rep]->transitions, alphabet[j]);
+            if (tt != NULL) {
+                int ndst = in_group[tt->to];
+                if (ndst >= 0) {
+                    result.states[i + 1]->transitions = addTransition(result.states[i + 1]->transitions, result.states[ndst + 1]->label, tt->ch);
+                }
+            }
+        }
+    }
+    
+    // Reconstruct Token Mapping
+    for (int i = 0; i < numgroups; i++) {
+        result.states[i + 1]->is_accepting = false;
+        result.states[i + 1]->token_id = -1;
+        for (int j = 0; j < groups[i]->n; j++) {
+            int old_state_id = groups[i]->members[j];
+            if (dfa.states[old_state_id]->is_accepting) {
+                if (!result.states[i + 1]->is_accepting) {
+                    result.states[i + 1]->is_accepting = true;
+                    result.states[i + 1]->token_id = dfa.states[old_state_id]->token_id;
+                } else {
+                    if (dfa.states[old_state_id]->token_id < result.states[i + 1]->token_id) {
+                        result.states[i + 1]->token_id = dfa.states[old_state_id]->token_id;
+                    }
+                }
+            }
+        }
+    }
+    
+    return result;
 }

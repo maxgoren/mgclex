@@ -66,9 +66,22 @@ int setContains(Set* set, int value) {
         int m = (l+r)/2;
         if (value < set->members[m]) r = m - 1;
         else if (value > set->members[m]) l = m + 1;
-        else return m;
+        else {
+            return m;
+        }
     }
     return -1;
+}
+void setErase(Set* set, int value) {
+    int target = setContains(set, value);
+    if (target != -1) {
+        int j = target;
+        while (j < set->n) {
+            set->members[j] = set->members[j+1];
+            j++;
+        }
+        set->n--;
+    }
 }
 
 void setAdd(Set* set, int value) {

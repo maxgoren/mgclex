@@ -8,11 +8,11 @@
 #define MIN_VERSION 2
 
 void showUsage();
-void generateLexer(char* specfilename, char* outfilename, bool compressTables);
+void generateLexer(char* specfilename, char* outfilename, bool compressTables, bool mindfa);
 
 int main(int argc, char* argv[]) {
     char *outfilename;
-    bool compressTable = false;
+    bool compressTable = false, minDFA = false;
     if (argc < 2) {
         showUsage();
         return -1;
@@ -23,38 +23,28 @@ int main(int argc, char* argv[]) {
             outfilename = argv[2];
         } else {
             outfilename = strdup("mgclex_matrix.h");
-            if (argv[2][1] == 'c')
-                compressTable = true;
         }
-        if (argc == 4)
-            compressTable = true;
     }
-    generateLexer(argv[1], outfilename, compressTable);
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            for (int j = 1; argv[i][j]; j++) {
+                if (argv[i][j] == 'c') compressTable = true;
+                if (argv[i][j] == 'm') minDFA = true;
+            }
+        }
+    }
+    generateLexer(argv[1], outfilename, compressTable, minDFA);
     return 0;
 }
 
 
-DFA minimize(DFA dfa) {
-    //step 1, partition states into accepting and not accepting sets.
-    Set accepting, notAccepting;
-    initSet(&accepting, dfa.numstates);
-    initSet(&notAccepting, dfa.numstates);
-    for (int i = 1; i <= dfa.numstates; i++) {
-        if (dfa.states[i]->is_accepting) {
-            setAdd(&accepting, i);
-        } else {
-            setAdd(&notAccepting, i);
-        }
-    }
-}
-
-void generateLexer(char* specfile, char* outfile, bool compressTables) {
+void generateLexer(char* specfile, char* outfile, bool compressTables, bool minDFA) {
     printf("[*] Reading MGCLex configuration file...\n");
     readConfig(specfile);
     printf("[*] Initializing...\n");
     CombinedRE* cre = init_lexer_patterns(num_rules);
     printf("[*] Compiling DFA...\n");
-    DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table);
+    DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table, minDFA);
     printf("[*] Writing matrix and accept states to %s\n", outfile);
     dfa2matrix(&dfa, outfile, symbols, num_symbols, 1, compressTables);
     printf("[*] Cleaning up...\n");
@@ -65,6 +55,7 @@ void generateLexer(char* specfile, char* outfile, bool compressTables) {
 void showUsage() {
     printf("MGCLex v%d.%d, The no-frills lexer generator. (c) 2026 MaxGCoding.com\n", MAJ_VERSION, MIN_VERSION);
     printf("Usage:\n");
-    printf("\t mgclex <spec file name> [output file name]\n");
+    printf("\t mgclex <spec file name> [output file name] [options]\n");
+    printf("\t Options: \n \t \t -c pair compress tables\n \t \t -m minimize resultant DFA (Moores Algorithm)\n");
     printf("\n");
 }

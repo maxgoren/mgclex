@@ -10,6 +10,7 @@ void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int 
         writeHeader(fd);
         writeEnum(fd, symbols, num_symbols, asStr);
         if (compressTable) {
+            printf("[*] Writing Table with Pair Compression\n");
             writePairCompressedMatrix(fd, dfa, matrix);
         } else {
             writeUnCompressedMatrix(fd, dfa, matrix);
@@ -38,7 +39,7 @@ void DFS(DFA* dfa, int matrix[][256]) {
     for (int i = 0; i < dfa->numstates+1; i++)
         for (int j = 0; j < 256; j++)
             matrix[i][j] = 0;
-    for (int i = 1; i <= dfa->numstates; i++) {
+    for (int i = 1; i < dfa->numstates+1; i++) {
         dfs(dfa->states[i]->transitions, i, matrix);
     }
 }
@@ -95,7 +96,8 @@ int entryCount(int matrix[][256], int i) {
 void writePairCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
     int realrows[dfa->numstates];
     int i = 0;
-    for (i = 0; i <= dfa->numstates; i++) {
+    realrows[i++] = -1;
+    for (; i <= dfa->numstates; i++) {
         int numEnt = entryCount(matrix, i);
         if (numEnt) {
             fprintf(fd, "static const int mgc_lexer_matrix_row%d[] = { %d, ",i, numEnt);

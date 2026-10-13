@@ -31,7 +31,8 @@ Supported Regular expression operators:
       RR - Concatenation
       [AEIOU] - Character classes, example matches a vowel
       [0-9A-Fa-f] - Ranges, example matches hexadecimal digits/chars
-      . - Wildcard to match any character ex: ".*" is a pattern to match quoted strings.
+      [^xyz] - Negated Character class, will match anyletter that _isnt_ xyz
+      . - Wildcard to match any character, ex: r.n matches ran, and run, and rzn too, etc.
       R(R*) - Grouping: Parentheses can be used to override operator precedence
       
 To use any of the operators as literals, you must escape them with a \ (see calculator example).

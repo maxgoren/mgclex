@@ -5,11 +5,11 @@
 #include "readconfig.h"
 
 bool isWhitespace(char c) {
-    return c == ' ' || c == '\t';
+    return c == ' ' || c == '\t' || c == '\r';
 }
 
 void skipWs(char* str, int* pos) {
-    while (isWhitespace(str[*pos])) *pos++;
+    while (isWhitespace(str[*pos++]));
 }
 
 char* extractPattern(char* str, int* pos) {
@@ -29,8 +29,8 @@ char* extractPattern(char* str, int* pos) {
 char* extractSymbol(char* tmp, int pos) {
     char* tmp2 = malloc(sizeof(char)*strlen(tmp)); 
     int i = pos, j = 0;
-    if (tmp[i] == ' ') skipWs(tmp, &i);
-    while (tmp[i] && tmp[i] != '}') { tmp2[j] = tmp[i]; i++; j++; }
+    while (tmp[i] && tmp[i] == ' ') skipWs(tmp, &i);
+    while (tmp[i] && tmp[i] != '}' && tmp[i] != ' ') { tmp2[j] = tmp[i]; i++; j++; }
     return tmp2;
 }
 
@@ -56,6 +56,7 @@ void readConfig(char* filename) {
             printf("Pattern: %s\n", pat);
             if (buffer[pos] == ',') {
                 pos++;
+                while (buffer[pos] == ' ') pos++;
             } else {
                 printf("Error: improperly formatted specification file on line %d.\n", lineno);
                 exit(EXIT_FAILURE);
