@@ -4,20 +4,17 @@
 //outputs DFA as a 2d matrix and accept table as a header file
 void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr, bool compressTable) {
     int matrix[dfa->numstates+1][256];
-    printf("Performing DFA on DFA.\n");
     DFS(dfa, matrix);
-    printf("Done.\n");
     FILE* fd = fopen(filename, "w+");
     if (fd != NULL) {
         writeHeader(fd);
         writeEnum(fd, symbols, num_symbols, asStr);
-        printf("Writing Matrix");
         if (compressTable) {
+            printf("[*] Writing Table with Pair Compression\n");
             writePairCompressedMatrix(fd, dfa, matrix);
         } else {
             writeUnCompressedMatrix(fd, dfa, matrix);
         }
-        puts("Writing Accept");
         writeAccept(fd, dfa);
         writeFooter(fd);
         fclose(fd);

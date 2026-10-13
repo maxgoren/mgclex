@@ -19,10 +19,13 @@ char* augmentRE(char* orig) {
     return fixed;
 }
 
-DFA ast2dfa(char* re, re_ast* ast, re_ast*** ast_node_table) {
+DFA ast2dfa(char* re, re_ast* ast, re_ast*** ast_node_table, bool minDFA) {
     computeFollowPos(ast, ast_node_table);
     char* no_concat = toString(in2post(tokenize(re)));
     DFA dfa = buildDFA(ast, no_concat, *ast_node_table);
-    DFA result = minimize(dfa, *ast_node_table);
-    return result;
+    if (minDFA) {
+        printf("[*] Minimizing DFA with Moores Algorithm\n");
+        return minimize(dfa, *ast_node_table);
+    }
+    return dfa;
 }
