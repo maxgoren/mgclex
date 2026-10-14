@@ -8,11 +8,14 @@
 #define MAJ_VERSION 1
 #define MIN_VERSION 2
 
-void generateLexer(char* specfile, char* outfile, bool compressTables, bool minDFA) {
+TerminalList* generateLexer(char* specfile, char* outfile, bool compressTables, bool minDFA, int loud) {
     printf("[*] Reading MGCLex configuration file...\n");
-    readConfig(specfile);
+    readConfig(specfile, loud);
     printf("[*] Initializing...\n");
     CombinedRE* cre = init_lexer_patterns(num_rules);
+    TerminalList* tl = malloc(sizeof(TerminalList));
+    tl->symbols = symbols;
+    tl->num_symbols = num_symbols;
     printf("[*] Compiling DFA...\n");
     DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table, minDFA);
     printf("[*] Writing matrix and accept states to %s\n", outfile);
@@ -20,12 +23,13 @@ void generateLexer(char* specfile, char* outfile, bool compressTables, bool minD
     printf("[*] Cleaning up...\n");
     freeDFA(&dfa);
     printf("[*] Complete!\n");
+    return tl;
 }
 
 void showUsage() {
     printf("MGCLex v%d.%d, The no-frills lexer generator. (c) 2026 MaxGCoding.com\n", MAJ_VERSION, MIN_VERSION);
     printf("Usage:\n");
     printf("\t mgclex <spec file name> [output file name] [options]\n");
-    printf("\t Options: \n \t \t -c pair compress tables\n \t \t -m minimize resultant DFA (Moores Algorithm)\n");
+    printf("\t Options: \n \t \t -v verbose output \n \t \t -c pair compress tables\n \t \t -m minimize resultant DFA (Moores Algorithm)\n");
     printf("\n");
 }

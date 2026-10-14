@@ -23,6 +23,7 @@ char* extractPattern(char* str, int* pos) {
     }
     if (str[i] == '"') i++;
     *pos = i;
+    pattern[j++] = '\0';
     return pattern;
 }
 
@@ -31,11 +32,12 @@ char* extractSymbol(char* tmp, int pos) {
     int i = pos, j = 0;
     while (tmp[i] && tmp[i] == ' ') skipWs(tmp, &i);
     while (tmp[i] && tmp[i] != '}' && tmp[i] != ' ') { tmp2[j] = tmp[i]; i++; j++; }
+    tmp2[j++] = '\0';
     return tmp2;
 }
 
 
-void readConfig(char* filename) {
+void readConfig(char* filename, int loud) {
     char buffer[512];
     FILE* fd = fopen(filename, "r");
     if (fd != NULL) {
@@ -53,7 +55,9 @@ void readConfig(char* filename) {
                 exit(EXIT_FAILURE);
             }
             char *pat = extractPattern(buffer, &pos);
-            printf("Pattern: %s\n", pat);
+            if (loud > 0) {
+                printf("Pattern: %s\n", pat);
+            }
             if (buffer[pos] == ',') {
                 pos++;
                 while (buffer[pos] == ' ') pos++;
@@ -62,12 +66,14 @@ void readConfig(char* filename) {
                 exit(EXIT_FAILURE);
             }                                                                                                                                                                                                                   
             char* symbol = extractSymbol(buffer, pos);
-            printf("Symbol: %s\n", symbol);
-            int id = registerSymbol(symbol);
-            addTokenRule(pat, id);
-            printf("------------------------\n");
+            if (loud > 0) {
+                printf("Symbol: %s\n", symbol);
+                printf("Registered %s at %d\n", symbol, num_symbols);
+                printf("------------------------\n");
+            }
+            addTokenRule(pat, registerSymbol(symbol));
         }
-        printf("Read: %d Rules for %d Symbols\n", num_rules, num_symbols);
+        printf("\t + Read: %d Rules for %d Symbols\n", num_rules, num_symbols);
         fclose(fd);
     } else {
         printf("Error: could not open specification file '%s' for reading.\n", filename);

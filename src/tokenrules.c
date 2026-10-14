@@ -34,7 +34,6 @@ int registerSymbol(char* symbol) {
         resizeVector();
     }
     symbols[num_symbols++] = symbol;
-    printf("Registered %s at %d\n", symbol, num_symbols);
     return num_symbols-1;
 }
 

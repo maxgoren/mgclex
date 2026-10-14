@@ -6,6 +6,7 @@
 int main(int argc, char* argv[]) {
     char *outfilename;
     bool compressTable = false, minDFA = false;
+    int loud = 0;
     if (argc < 2) {
         showUsage();
         return -1;
@@ -23,9 +24,10 @@ int main(int argc, char* argv[]) {
             for (int j = 1; argv[i][j]; j++) {
                 if (argv[i][j] == 'c') compressTable = true;
                 if (argv[i][j] == 'm') minDFA = true;
+                if (argv[i][j] == 'v') loud = 1;
             }
         }
     }
-    generateLexer(argv[1], outfilename, compressTable, minDFA);
+    generateLexer(argv[1], outfilename, compressTable, minDFA, loud);
     return 0;
 }

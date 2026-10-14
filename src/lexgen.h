@@ -20,6 +20,11 @@ typedef struct {
     int table_size;
 } CombinedRE;
 
+typedef struct {
+    int num_rules;
+    TokenRule* rules;
+} RuleSet;
+
 extern int num_rules;
 extern bool in_string;
 extern TokenRule* rules;
