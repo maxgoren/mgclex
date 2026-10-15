@@ -4,7 +4,8 @@
 extern "C" {
 #endif
 #include "lexgen.h"
-
+#include "vector.h"
+/*
 //For creating Symbol enum
 extern int num_symbols;
 extern int sym_cap;
@@ -14,10 +15,13 @@ extern char** symbols;
 extern int capacity;
 extern int num_rules;
 extern TokenRule* rules;
-
+*/
 void initSymbolSet();
 
 void initTokenRulesVec();
+extern Vector* symbols;
+extern Vector* rules;
+
 int registerSymbol(char* symbol);
 void addTokenRule(char* pattern, int id);
 

@@ -6,6 +6,7 @@ extern "C" {
 #include "dfa/re2ast/src/ast.h"
 #include "dfa/re2ast/src/parser.h"
 #include "dfa/ast_to_dfa.h"
+#include "vector.h"
 
 typedef struct {
     char* pattern;
@@ -25,9 +26,7 @@ typedef struct {
     TokenRule* rules;
 } RuleSet;
 
-extern int num_rules;
-extern bool in_string;
-extern TokenRule* rules;
+extern Vector* rules;
 void tag_final_pos_with_token_id(re_ast* ast, int rulenum);
 CombinedRE* combine(int numrules);
 CombinedRE* init_lexer_patterns(int numrules);

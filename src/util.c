@@ -149,7 +149,7 @@ void writeAccept(FILE* fd, DFA* dfa) {
     fprintf(fd, "static const int mgc_lex_accept[%d] = {\n", dfa->numstates+1);
     for (int i = 0; i <= dfa->numstates; i++) {
         if (dfa->states[i] != NULL && dfa->states[i]->is_accepting) {
-            fprintf(fd, "\t%d", rules[dfa->states[i]->token_id].token);
+            fprintf(fd, "\t%d", ((TokenRule*)rules->data[dfa->states[i]->token_id])->token);
         } else {
             fprintf(fd, "\t-1");
         }
