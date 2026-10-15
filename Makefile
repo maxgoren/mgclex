@@ -22,7 +22,7 @@ install:
 	mv libmgclex.so /usr/local/lib
 	ldconfig
 	gcc src/main.c -o mgclex -lmgclex
-	mv mgclex /usr/local/bin 
+	cp mgclex /usr/local/bin 
 	cp src/mgclex.h /usr/include/mgc
 
 clean:

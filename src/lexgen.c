@@ -14,9 +14,6 @@ void tag_final_pos_with_token_id(re_ast* ast, int rulenum) {
 }
 
 CombinedRE* combine(int numrules) {
-    for (int i = 0; i < rules->n; i++) {
-        printf("%s\n", ((char*)((TokenRule*)rules->data[0])->pattern));
-    }
     re_ast* root = re2ast(augmentRE((char*)((TokenRule*)rules->data[0])->pattern));
     tag_final_pos_with_token_id(root, 0);
     char* re = malloc(sizeof(char)*1024);
@@ -27,13 +24,13 @@ CombinedRE* combine(int numrules) {
         re[p++] = pat[k];
     for (int i = 1; i < numrules; i++) {
         re[p++] = '|';
-        re_ast* tmp = re2ast(augmentRE((char*)((TokenRule*)rules->data[0])->pattern));
+        re_ast* tmp = re2ast(augmentRE((char*)((TokenRule*)rules->data[i])->pattern));
         tag_final_pos_with_token_id(tmp, i);
         re_ast* alt = makeNode(1, *makeToken(RE_OR, '|'));
         alt->left = root;
         alt->right = tmp;
         root = alt;
-        pat = augmentRE((char*)((TokenRule*)rules->data[0])->pattern);
+        pat = augmentRE((char*)((TokenRule*)rules->data[i])->pattern);
         for (int k = 0; k < strlen(pat); k++)
             re[p++] = pat[k];
     }

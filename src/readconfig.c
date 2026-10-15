@@ -41,8 +41,6 @@ void readConfig(char* filename, int loud) {
     char buffer[512];
     FILE* fd = fopen(filename, "r");
     if (fd != NULL) {
-        initTokenRulesVec();
-        initSymbolSet();
         int lineno = 0;
         while (fgets(buffer, sizeof(buffer), fd)) {
             int pos = 0;
