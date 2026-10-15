@@ -39,7 +39,7 @@ CombinedRE* combine(int numrules) {
     cre->pattern = re;
     cre->patlen = strlen(cre->pattern);
     cre->ast = root;
-    printf("Done building Combined RE.\n");
+    printf("\t + Done building combined RE.\n");
     return cre;
 }
 

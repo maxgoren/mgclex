@@ -1,6 +1,6 @@
 #ifndef readconfig_h
 #define readconfig_h
 
-void readConfig(char* filename);
+void readConfig(char* filename, int loud);
 
 #endif
