@@ -214,6 +214,7 @@ re_ast* re2ast(char* regex) {
     REToken* postfix = in2post(tokenized);        <- convert token list from infix to postfix form via shunting yard
     re_ast* ast = makeTree(postfix);         <- create AST from postfix expression
     */
+   printf("Ok goy, %s\n", regex);
     REToken* tokens = in2post(tokenize(addConCat(regex)));
     re_ast* ast = makeTree(tokens);
     freeTokenStream(tokens);

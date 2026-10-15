@@ -1,73 +1,43 @@
 #include "tokenrules.h"
 
-int num_symbols;
-int sym_cap;
-char** symbols;
+Vector* symbols;
+Vector* rules;
 
 void initSymbolSet() {
-    num_symbols = 0;
-    sym_cap = 5;
-    symbols = (char**)malloc(sizeof(char*)*sym_cap);
+    symbols = (Vector*)malloc(sizeof(Vector));
+    initVector(symbols);
+}
+
+void initTokenRulesVec() {
+    rules = (Vector*)malloc(sizeof(Vector));
+    initVector(rules);
 }
 
 int symbolExists(char* symbol) {
-    for (int i = 0; i < num_symbols; i++) {
-        if (strcmp(symbol, symbols[i]) == 0)
+    for (int i = 0; i < symbols->n; i++) {
+        if (strcmp(symbol, (char*)(symbols->data[i])) == 0)
             return i;
     }
     return -1;
-}
-
-void resizeVector() {
-    char** tmp = symbols;
-    symbols = (char**)malloc(sizeof(char*)*(2*sym_cap));
-    for (int i = 0; i < num_symbols; i++)
-        symbols[i] = tmp[i];
-    sym_cap *= 2;
 }
 
 int registerSymbol(char* symbol) {
     int symnum = -1;
     if ((symnum = symbolExists(symbol)) != -1)
         return symnum;
-    if (num_symbols+1 == sym_cap) {
-        resizeVector();
-    }
-    symbols[num_symbols++] = symbol;
-    return num_symbols-1;
+    addVec(symbols, strdup(symbol));
+    return symbols->n-1;
 }
 
-int num_rules;
-int capacity;
-TokenRule* rules;
-
-void initTokenRulesVec() {
-    num_rules = 0;
-    capacity = 5;
-    rules = (TokenRule*)malloc(sizeof(TokenRule)*capacity);
-}
-
-void resizeRuleVector() {
-    TokenRule* tmp = rules;
-    rules = (TokenRule*)malloc(sizeof(TokenRule)*(2*capacity));
-    if (rules == NULL) {
-        printf("Error: out of memory trying to add token rule.\n");
-        rules = tmp;
-        return;
-    }
-    for (int i = 0; i < num_rules; i++) {
-        rules[i].pattern = tmp[i].pattern;
-        rules[i].token = tmp[i].token;
-    }
-    capacity *= 2;
-    free(tmp);
-}
 
 void addTokenRule(char* pattern, int id) {
-    if (num_rules+1 == capacity) {
-        resizeRuleVector();
-    }
-    rules[num_rules].pattern = pattern;
-    rules[num_rules].token = id;
-    num_rules++;
+    TokenRule* rule = malloc(sizeof(TokenRule));
+    rule->pattern = pattern;
+    rule->token = id;
+    addVec(rules, rule);
+}
+
+void freeTokenRule(TokenRule* tr) {
+    free(tr->pattern);
+    free(tr);
 }

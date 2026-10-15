@@ -10,18 +10,24 @@
 
 TerminalList* generateLexer(char* specfile, char* outfile, bool compressTables, bool minDFA, int loud) {
     printf("[*] Reading MGCLex configuration file...\n");
+    initTokenRulesVec();
+    initSymbolSet();
     readConfig(specfile, loud);
     printf("[*] Initializing...\n");
-    CombinedRE* cre = init_lexer_patterns(num_rules);
+    CombinedRE* cre = init_lexer_patterns(rules->n);
     TerminalList* tl = malloc(sizeof(TerminalList));
-    tl->symbols = symbols;
-    tl->num_symbols = num_symbols;
+    tl->symbols = (char**)symbols->data;
+    tl->num_symbols = symbols->n;
     printf("[*] Compiling DFA...\n");
     DFA dfa = ast2dfa(cre->pattern, cre->ast, &cre->node_table, minDFA);
     printf("[*] Writing matrix and accept states to %s\n", outfile);
-    dfa2matrix(&dfa, outfile, symbols, num_symbols, 1, compressTables);
+    dfa2matrix(&dfa, outfile, (char**)symbols->data, symbols->n, 1, compressTables);
     printf("[*] Cleaning up...\n");
     freeDFA(&dfa);
+    for (int i = 0; i < rules->n; i++) {
+        freeTokenRule((TokenRule*)rules->data[i]);
+    }
+    freeVector(rules);
     printf("[*] Complete!\n");
     return tl;
 }

@@ -41,8 +41,6 @@ void readConfig(char* filename, int loud) {
     char buffer[512];
     FILE* fd = fopen(filename, "r");
     if (fd != NULL) {
-        initTokenRulesVec();
-        initSymbolSet();
         int lineno = 0;
         while (fgets(buffer, sizeof(buffer), fd)) {
             int pos = 0;
@@ -68,12 +66,12 @@ void readConfig(char* filename, int loud) {
             char* symbol = extractSymbol(buffer, pos);
             if (loud > 0) {
                 printf("Symbol: %s\n", symbol);
-                printf("Registered %s at %d\n", symbol, num_symbols);
+                printf("Registered %s at %d\n", symbol, symbols->n);
                 printf("------------------------\n");
             }
             addTokenRule(pat, registerSymbol(symbol));
         }
-        printf("\t + Read: %d Rules for %d Symbols\n", num_rules, num_symbols);
+        printf("\t + Read: %d Rules for %d Symbols\n", rules->n, symbols->n);
         fclose(fd);
     } else {
         printf("Error: could not open specification file '%s' for reading.\n", filename);
