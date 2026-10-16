@@ -8,7 +8,7 @@ extern "C" {
 #include <string.h>
 #include "lexgen.h"
 
-void dfa2matrix(DFA* d, char* filename, char* symbols[], int num_symbols, int asStr, bool compressTable);
+void dfa2matrix(DFA* d, char* filename, Vector* rules, Vector* symbols, int asStr, bool compressTable);
 void DFS(DFA* d, int matrix[][256]);
 void dfs(Transition* t, int s, int mat[][256]);
 void writeHeader(FILE* fd);
@@ -17,7 +17,7 @@ void writeSymbolsAsStrings(FILE* fd, char* symbols[], int ns);
 void writeEnum(FILE* fd, char* symbols[], int ns, int asStr);
 void writePairCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]);
 void writeUnCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]);
-void writeAccept(FILE* fd, DFA* dfa);
+void writeAccept(FILE* fd, DFA* dfa, Vector* rules);
 
 #ifdef __cplusplus
 }

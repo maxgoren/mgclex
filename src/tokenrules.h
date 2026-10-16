@@ -6,14 +6,8 @@ extern "C" {
 #include "lexgen.h"
 #include "vector.h"
 
-
-extern Vector* symbols;
-extern Vector* rules;
-
-void initSymbolSet();
-void initTokenRulesVec();
-int registerSymbol(char* symbol);
-void addTokenRule(char* pattern, int id);
+int registerSymbol(Vector* v, char* symbol);
+void addTokenRule(Vector* v, char* pattern, int id);
 void freeTokenRule(TokenRule* tr);
 
 #ifdef __cplusplus

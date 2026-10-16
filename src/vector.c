@@ -6,7 +6,13 @@ void initVector(Vector* v) {
     v->data = malloc(sizeof(void*)*v->maxN);
 }
 
-void addVec(Vector* v, void* data) {
+Vector* allocVector() {
+    Vector* v = (Vector*)malloc(sizeof(Vector));
+    initVector(v);
+    return v;
+}
+
+void pushVector(Vector* v, void* data) {
     if (v->n + 1 >= v->maxN) {
         resizeVector(v);
     }
@@ -15,11 +21,12 @@ void addVec(Vector* v, void* data) {
 
 void resizeVector(Vector* v) {
     void** tmp = v->data;
-    v->data = malloc(sizeof(void*)*(2*v->maxN));
+    int nm = 2*v->maxN;
+    v->data = malloc(sizeof(void*)*(2*nm));
     for (int i = 0; i < v->n; i++)
         v->data[i] = tmp[i];
     free(tmp);
-    v->maxN = 2*v->maxN;
+    v->maxN = nm;
 }
 
 void freeVector(Vector* v) {

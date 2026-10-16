@@ -11,8 +11,9 @@ typedef struct {
     int maxN;
 } Vector;
 
+Vector* allocVector();
 void initVector(Vector* vec);
-void addVec(Vector* vec, void* data);
+void pushVector(Vector* vec, void* data);
 void resizeVector(Vector* v);
 void freeVector(Vector* h);
 

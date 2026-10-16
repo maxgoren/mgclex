@@ -37,7 +37,7 @@ char* extractSymbol(char* tmp, int pos) {
 }
 
 
-void readConfig(char* filename, int loud) {
+void readConfig(char* filename, Vector* rules, Vector* symbols, int loud) {
     char buffer[512];
     FILE* fd = fopen(filename, "r");
     if (fd != NULL) {
@@ -69,7 +69,7 @@ void readConfig(char* filename, int loud) {
                 printf("Registered %s at %d\n", symbol, symbols->n);
                 printf("------------------------\n");
             }
-            addTokenRule(pat, registerSymbol(symbol));
+            addTokenRule(rules, pat, registerSymbol(symbols, symbol));
         }
         printf("\t + Read: %d Rules for %d Symbols\n", rules->n, symbols->n);
         fclose(fd);

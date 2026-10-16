@@ -21,15 +21,9 @@ typedef struct {
     int table_size;
 } CombinedRE;
 
-typedef struct {
-    int num_rules;
-    TokenRule* rules;
-} RuleSet;
-
-extern Vector* rules;
 void tag_final_pos_with_token_id(re_ast* ast, int rulenum);
-CombinedRE* combine(int numrules);
-CombinedRE* init_lexer_patterns(int numrules);
+CombinedRE* combine(Vector* rules);
+CombinedRE* init_lexer_patterns(Vector* rules);
 
 
 #ifdef __cplusplus

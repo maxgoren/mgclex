@@ -13,7 +13,7 @@ void tag_final_pos_with_token_id(re_ast* ast, int rulenum) {
     }
 }
 
-CombinedRE* combine(int numrules) {
+CombinedRE* combine(Vector* rules) {
     re_ast* root = re2ast(augmentRE((char*)((TokenRule*)rules->data[0])->pattern));
     tag_final_pos_with_token_id(root, 0);
     char* re = malloc(sizeof(char)*1024);
@@ -22,7 +22,7 @@ CombinedRE* combine(int numrules) {
     char* pat = augmentRE((char*)((TokenRule*)rules->data[0])->pattern);
     for (int k = 0; k < strlen(pat); k++)
         re[p++] = pat[k];
-    for (int i = 1; i < numrules; i++) {
+    for (int i = 1; i < rules->n; i++) {
         re[p++] = '|';
         re_ast* tmp = re2ast(augmentRE((char*)((TokenRule*)rules->data[i])->pattern));
         tag_final_pos_with_token_id(tmp, i);
@@ -44,6 +44,6 @@ CombinedRE* combine(int numrules) {
     return cre;
 }
 
-CombinedRE* init_lexer_patterns(int num_rules) {
-    return combine(num_rules);
+CombinedRE* init_lexer_patterns(Vector* rules) {
+    return combine(rules);
 }

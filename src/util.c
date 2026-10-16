@@ -2,20 +2,20 @@
 
 
 //outputs DFA as a 2d matrix and accept table as a header file
-void dfa2matrix(DFA* dfa, char* filename, char* symbols[], int num_symbols, int asStr, bool compressTable) {
+void dfa2matrix(DFA* dfa, char* filename, Vector* rules, Vector* symbols, int asStr, bool compressTable) {
     int matrix[dfa->numstates+1][256];
     DFS(dfa, matrix);
     FILE* fd = fopen(filename, "w+");
     if (fd != NULL) {
         writeHeader(fd);
-        writeEnum(fd, symbols, num_symbols, asStr);
+        writeEnum(fd, (char**)symbols->data, symbols->n, asStr);
         if (compressTable) {
             printf("[*] Writing Table with Pair Compression\n");
             writePairCompressedMatrix(fd, dfa, matrix);
         } else {
             writeUnCompressedMatrix(fd, dfa, matrix);
         }
-        writeAccept(fd, dfa);
+        writeAccept(fd, dfa, rules);
         writeFooter(fd);
         fclose(fd);
     } else {
@@ -145,7 +145,7 @@ void writeUnCompressedMatrix(FILE* fd, DFA* dfa, int matrix[][256]) {
     fprintf(fd, "};\n\n");
 }
 
-void writeAccept(FILE* fd, DFA* dfa) {
+void writeAccept(FILE* fd, DFA* dfa, Vector* rules) {
     fprintf(fd, "static const int mgc_lex_accept[%d] = {\n", dfa->numstates+1);
     for (int i = 0; i <= dfa->numstates; i++) {
         if (dfa->states[i] != NULL && dfa->states[i]->is_accepting) {
